@@ -11,32 +11,32 @@ import edu.ksu.canvas.model.status.CanvasErrorResponse;
 import edu.ksu.canvas.model.status.CanvasErrorResponse.ErrorMessage;
 import edu.ksu.canvas.oauth.OauthToken;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.client.HttpClient;
+import org.apache.hc.core5.http.client.config.CookieSpecs;
+import org.apache.hc.core5.http.client.config.RequestConfig;
+import org.apache.hc.core5.http.client.entity.UrlEncodedFormEntity;
+import org.apache.hc.core5.http.client.methods.CloseableHttpResponse;
+import org.apache.hc.core5.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.hc.core5.http.client.methods.HttpGet;
+import org.apache.hc.core5.http.client.methods.HttpPost;
+import org.apache.hc.core5.http.client.methods.HttpPut;
+import org.apache.hc.core5.http.client.methods.HttpRequestBase;
+import org.apache.hc.core5.http.entity.ContentType;
+import org.apache.hc.core5.http.entity.StringEntity;
+import org.apache.hc.core5.http.entity.mime.content.ContentBody;
+import org.apache.hc.core5.http.http.entity.mime.content.FileBody;
+import org.apache.hc.core5.http.entity.mime.content.InputStreamBody;
+import org.apache.hc.core5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.core5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.core5.http.impl.client.BasicResponseHandler;
+import org.apache.hc.core5.http.impl.client.CloseableHttpClient;
+import org.apache.hc.core5.http.impl.client.HttpClientBuilder;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class SimpleRestClient implements RestClient {
     public Response sendApiGet(@NotNull OauthToken token, @NotNull String url,
                                int connectTimeout, int readTimeout) throws IOException {
 
-        LOG.debug("Sending GET request to URL: " + url);
+        LOG.debug("Sending GET request to URL: {}", url);
         Long beginTime = System.currentTimeMillis();
         Response response = new Response();
         try (CloseableHttpClient httpClient = createHttpClient(connectTimeout, readTimeout)) {
@@ -79,7 +79,7 @@ public class SimpleRestClient implements RestClient {
                 response.setContent(handleResponse(httpResponse, httpGet));
                 response.setResponseCode(httpResponse.getStatusLine().getStatusCode());
                 Long endTime = System.currentTimeMillis();
-                LOG.debug("GET call took: " + (endTime - beginTime) + "ms");
+                LOG.debug("GET call took: {}ms", endTime - beginTime);
 
                 //deal with pagination
                 Header linkHeader = httpResponse.getFirstHeader("Link");
@@ -114,7 +114,7 @@ public class SimpleRestClient implements RestClient {
     // PUT and POST are identical calls except for the header specifying the method
     private Response sendJsonPostOrPut(OauthToken token, String url, String json,
                                        int connectTimeout, int readTimeout, String method) throws IOException {
-        LOG.debug("Sending JSON " + method + " to URL: " + url);
+        LOG.debug("Sending JSON {} to URL: {}", method, url);
         Response response = new Response();
 
         HttpClient httpClient = createHttpClient(connectTimeout, readTimeout);
@@ -139,7 +139,7 @@ public class SimpleRestClient implements RestClient {
             response.setContent(content);
             response.setResponseCode(httpResponse.getStatusLine().getStatusCode());
             Long endTime = System.currentTimeMillis();
-            LOG.debug("POST call took: " + (endTime - beginTime) + "ms");
+            LOG.debug("POST call took: {}ms", endTime - beginTime);
         } finally {
             action.releaseConnection();
         }
@@ -165,14 +165,14 @@ public class SimpleRestClient implements RestClient {
         response.setContent(content);
         response.setResponseCode(httpResponse.getStatusLine().getStatusCode());
         Long endTime = System.currentTimeMillis();
-        LOG.debug("POST call took: " + (endTime - beginTime) + "ms");
+        LOG.debug("POST call took: {}ms", endTime - beginTime);
         return response;
     }
 
     @Override
     public Response sendApiPostFile(OauthToken token, String url, Map<String, List<String>> postParameters, String fileParameter, String filePath, InputStream is,
                                 int connectTimeout, int readTimeout) throws InvalidOauthTokenException, IOException {
-        LOG.debug("Sending API POST file request to URL: " + url);
+        LOG.debug("Sending API POST file request to URL: {}", url);
         Response response = new Response();
         HttpClient httpClient = createHttpClient(connectTimeout, readTimeout);
         Long beginTime = System.currentTimeMillis();
@@ -199,14 +199,14 @@ public class SimpleRestClient implements RestClient {
         response.setContent(content);
         response.setResponseCode(httpResponse.getStatusLine().getStatusCode());
         Long endTime = System.currentTimeMillis();
-        LOG.debug("POST file call took: " + (endTime - beginTime) + "ms");
+        LOG.debug("POST file call took: {}ms", endTime - beginTime);
         return response;
     }
 
     @Override
     public Response sendApiPut(OauthToken token, String url, Map<String, List<String>> putParameters,
                                int connectTimeout, int readTimeout) throws InvalidOauthTokenException, IOException {
-        LOG.debug("Sending API PUT request to URL: " + url);
+        LOG.debug("Sending API PUT request to URL: {}", url);
         Response response = new Response();
         HttpClient httpClient = createHttpClient(connectTimeout, readTimeout);
         Long beginTime = System.currentTimeMillis();
@@ -221,7 +221,7 @@ public class SimpleRestClient implements RestClient {
         response.setContent(content);
         response.setResponseCode(httpResponse.getStatusLine().getStatusCode());
         Long endTime = System.currentTimeMillis();
-        LOG.debug("PUT call took: " + (endTime - beginTime) + "ms");
+        LOG.debug("PUT call took: {}ms", endTime - beginTime);
         return response;
     }
 
@@ -308,12 +308,11 @@ public class SimpleRestClient implements RestClient {
             //Throws a 403 with a "Rate Limit Exceeded" error message if the API throttle limit is hit.
             //See https://canvas.instructure.com/doc/api/file.throttling.html.
             if(xRateLimitRemaining < rateLimitThreshold) {
-                LOG.error("Canvas API rate limit exceeded. Bucket quota: " + xRateLimitRemaining + " Cost: " + xRateCost
-                        + " Threshold: " + rateLimitThreshold + " HTTP status: " + statusCode + " Requested URL: " + request.getURI());
+                LOG.error("Canvas API rate limit exceeded. Bucket quota: {} Cost: {} Threshold: {} HTTP status: {} Requested URL: {}", xRateLimitRemaining, xRateCost, rateLimitThreshold, statusCode, request.getURI());
                 throw new RateLimitException(extractErrorMessageFromResponse(httpResponse), String.valueOf(request.getURI()));
             }
         } catch (NullPointerException e) {
-            LOG.debug("Rate not being limited: " + e);
+            LOG.debug("Rate not being limited: {}", String.valueOf(e));
         }
         if (statusCode == 401) {
             //If the WWW-Authenticate header is set, it is a token problem.
@@ -327,20 +326,20 @@ public class SimpleRestClient implements RestClient {
             throw new UnauthorizedException();
         }
         if(statusCode == 403) {
-            LOG.error("Canvas has throttled this request. Requested URL: " + request.getURI());
+            LOG.error("Canvas has throttled this request. Requested URL: {}", request.getURI());
             throw new ThrottlingException(extractErrorMessageFromResponse(httpResponse), String.valueOf(request.getURI()));
         }
         if(statusCode == 404) {
-            LOG.error("Object not found in Canvas. Requested URL: " + request.getURI());
+            LOG.error("Object not found in Canvas. Requested URL: {}", request.getURI());
             throw new ObjectNotFoundException(extractErrorMessageFromResponse(httpResponse), String.valueOf(request.getURI()));
         }
         if(statusCode == 504) {
-            LOG.error("504 Gateway Time-out while requesting: " + request.getURI());
+            LOG.error("504 Gateway Time-out while requesting: {}", request.getURI());
             throw new RetriableException("status code: 504, reason phrase: Gateway Time-out", String.valueOf(request.getURI()));
         }
         // If we receive a 5xx exception, we should not wrap it in an unchecked exception for upstream clients to deal with.
         if(statusCode < 200 || (statusCode > (allowRedirect?399:299) && statusCode <= 499)) {
-            LOG.error("HTTP status " + statusCode + " returned from " + request.getURI());
+            LOG.error("HTTP status {} returned from {}", statusCode, request.getURI());
             handleError(request, httpResponse);
         }
         //TODO Handling of 422 when the entity is malformed.
@@ -423,11 +422,11 @@ public class SimpleRestClient implements RestClient {
             final String key = param.getKey();
             if(param.getValue() == null || param.getValue().isEmpty()) {
                 params.add(new BasicNameValuePair(key, null));
-                LOG.debug("key: " + key + "\tempty value");
+                LOG.debug("key: {}\tempty value", key);
             }
             for (final String value : param.getValue()) {
                 params.add(new BasicNameValuePair(key, value));
-                LOG.debug("key: "+ key +"\tvalue: " + value);
+                LOG.debug("key: {}\tvalue: {}", key, value);
             }
         }
         return params;
