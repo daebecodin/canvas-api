@@ -13,11 +13,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,7 +106,7 @@ public class CourseImpl extends BaseImpl<Course, CourseReader, CourseWriter> imp
     }
 
     @Override
-    public Boolean deleteCourse(String courseId) throws IOException {
+    public Boolean deleteCourse(String courseId) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting course {}", courseId);
         Map<String, List<String>> postParams = new HashMap<>();
         postParams.put("event", Collections.singletonList("delete"));
@@ -120,7 +122,7 @@ public class CourseImpl extends BaseImpl<Course, CourseReader, CourseWriter> imp
     }
 
     @Override
-    public Boolean deleteCourse(DeleteCourseOptions options) throws IOException {
+    public Boolean deleteCourse(DeleteCourseOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting course {}", options.getCourseId());
         String path = "";
         String accountId = options.getAccountId();
@@ -155,14 +157,14 @@ public class CourseImpl extends BaseImpl<Course, CourseReader, CourseWriter> imp
     }
 
     @Override
-    public Optional<Deposit> uploadFile(String courseId, UploadOptions uploadOptions) throws IOException {
+    public Optional<Deposit> uploadFile(String courseId, UploadOptions uploadOptions) throws IOException, ProtocolException, URISyntaxException {
         String url = buildCanvasUrl("courses/"+ courseId+ "/files", Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, uploadOptions.getOptionsMap());
         return responseParser.parseToObject(Deposit.class, response);
     }
 
     @Override
-    public Optional<Progress> batchUpdateCourseState(String accountId, Course.CourseEvent event, String... courseIds) throws IOException {
+    public Optional<Progress> batchUpdateCourseState(String accountId, Course.CourseEvent event, String... courseIds) throws IOException, ProtocolException, URISyntaxException {
         if(StringUtils.isBlank(accountId) || event == null || courseIds == null || courseIds.length == 0) {
             throw new IllegalArgumentException("Must supply account, event, and list of courses");
         }

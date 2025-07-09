@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
+import org.apache.hc.core5.http.ParseException;
 
 public class RefreshableOauthToken implements OauthToken {
     private static final long serialVersionUID = 1L;
@@ -53,7 +54,7 @@ public class RefreshableOauthToken implements OauthToken {
             }
             apiToken = refreshResponse.getAccessToken();
             tokenExpiration = new TokenExpiration(refreshResponse.getExpiresIn());
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             LOG.error("Exception while attempting to refresh access token");
             throw new RuntimeException(e);
         }

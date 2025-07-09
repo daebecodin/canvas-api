@@ -7,12 +7,14 @@ import edu.ksu.canvas.model.Course;
 import edu.ksu.canvas.net.FakeRestClient;
 import edu.ksu.canvas.requestOptions.DeleteCourseOptions;
 
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 public class CourseManagerUTest extends CanvasTestBase {
@@ -45,7 +47,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     @Test
     public void testCourseUpdate() throws IOException {
         Course newCourse = new Course();
-        newCourse.setId(new Long(ARBITRARY_COURSE_ID));
+        newCourse.setId(Long.valueOf(ARBITRARY_COURSE_ID));
         newCourse.setCourseCode("UpdatedSeleniumTestCourseCode");
         newCourse.setName("UpdatedSeleniumTestName");
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID;
@@ -58,7 +60,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     @Test
     public void testCourseUpdateWithId() throws IOException {
         Course newCourse = new Course();
-        newCourse.setId(new Long(ARBITRARY_COURSE_ID));
+        newCourse.setId(Long.valueOf(ARBITRARY_COURSE_ID));
         newCourse.setCourseCode("UpdatedSeleniumTestCourseCode");
         newCourse.setName("UpdatedSeleniumTestName");
         String url = baseUrl + "/api/v1/courses/" + "sis_course_id:sis-id-1";
@@ -71,7 +73,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     @Test
     public void testCourseUpdateWithBadCharacters() throws IOException {
         Course newCourse = new Course();
-        newCourse.setId(new Long(ARBITRARY_COURSE_ID));
+        newCourse.setId(Long.valueOf(ARBITRARY_COURSE_ID));
         newCourse.setCourseCode("UpdatedSeleniumTestCourseCode");
         newCourse.setName("UpdatedSeleniumTestName");
         String url = baseUrl + "/api/v1/courses/" + "sis_course_id:sis id 1 ū";
@@ -82,7 +84,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCourseDeletion() throws IOException {
+    public void testCourseDeletion() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID;
         fakeRestClient.addSuccessResponse(url, "SampleJson/course/DeleteCourseSuccess.json");
         Boolean deleted = courseWriter.deleteCourse(ARBITRARY_COURSE_ID);
@@ -90,7 +92,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCourseDeletion_withOptions() throws IOException {
+    public void testCourseDeletion_withOptions() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID;
         fakeRestClient.addSuccessResponse(url, "SampleJson/course/DeleteCourseSuccess.json");
         DeleteCourseOptions options = new DeleteCourseOptions(ARBITRARY_COURSE_ID,
@@ -100,7 +102,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCourseConclusion() throws IOException {
+    public void testCourseConclusion() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID;
         fakeRestClient.addSuccessResponse(url, "SampleJson/course/DeleteConcludeCourseSuccess.json");
         DeleteCourseOptions options = new DeleteCourseOptions(ARBITRARY_COURSE_ID,
@@ -123,7 +125,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testSisUserMasqueradeCourseDeletion() throws IOException {
+    public void testSisUserMasqueradeCourseDeletion() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID +"?as_user_id=sis_user_id:" + ARBITRARY_USER_ID;
         fakeRestClient.addSuccessResponse(url, "SampleJson/course/DeleteCourseSuccess.json");
         Boolean deleted = courseWriter.writeAsSisUser(ARBITRARY_USER_ID).deleteCourse(ARBITRARY_COURSE_ID);
@@ -143,7 +145,7 @@ public class CourseManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCanvasUserMasqueradeCourseDeletion() throws IOException {
+    public void testCanvasUserMasqueradeCourseDeletion() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_COURSE_ID + "?as_user_id=" + ARBITRARY_USER_ID;
         System.out.println("putting URL in face client: " + url);
         fakeRestClient.addSuccessResponse(url, "SampleJson/course/DeleteCourseSuccess.json");

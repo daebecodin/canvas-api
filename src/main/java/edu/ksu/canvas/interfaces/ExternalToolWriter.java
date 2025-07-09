@@ -1,9 +1,11 @@
 package edu.ksu.canvas.interfaces;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import edu.ksu.canvas.model.ExternalTool;
+import org.apache.hc.core5.http.ProtocolException;
 
 public interface ExternalToolWriter extends CanvasWriter<ExternalTool, ExternalToolWriter>{
 
@@ -50,7 +52,7 @@ public interface ExternalToolWriter extends CanvasWriter<ExternalTool, ExternalT
      * @return The deleted tool. Should have a workflow state of "deleted"
      * @throws IOException if there is an error communicating with Canvas
      */
-    public Optional<ExternalTool> deleteExternalToolInCourse(String courseId, Long toolId) throws IOException;
+    public Optional<ExternalTool> deleteExternalToolInCourse(String courseId, Long toolId) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Delete an external tool from an account.
@@ -59,5 +61,5 @@ public interface ExternalToolWriter extends CanvasWriter<ExternalTool, ExternalT
      * @return The deleted tool. Should have a workflow state of "deleted"
      * @throws IOException if there is an error communicating with Canvas
      */
-    public Optional<ExternalTool> deleteExternalToolInAccount(String accountId, Long toolId) throws IOException;
+    public Optional<ExternalTool> deleteExternalToolInAccount(String accountId, Long toolId) throws IOException, ProtocolException, URISyntaxException;
 }

@@ -13,11 +13,13 @@ import edu.ksu.canvas.requestOptions.ListCourseAssignmentsOptions;
 import edu.ksu.canvas.requestOptions.ListUserAssignmentOptions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,14 +64,14 @@ public class AssignmentImpl extends BaseImpl<Assignment, AssignmentReader, Assig
     }
 
     @Override
-    public Optional<Assignment> deleteAssignment(String courseId, Long assignmentId) throws IOException {
+    public Optional<Assignment> deleteAssignment(String courseId, Long assignmentId) throws IOException, ProtocolException, URISyntaxException {
         Map<String, List<String>> postParams = new HashMap<>();
         postParams.put("event", Collections.singletonList("delete"));
         String createdUrl = buildCanvasUrl("courses/" + courseId + "/assignments/" + assignmentId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, createdUrl, postParams);
         LOG.debug("response {}", response.toString());
         if(response.getErrorHappened() || response.getResponseCode() != 200){
-            LOG.debug("Failed to delete assignment, error message: " + response.toString());
+            LOG.debug("Failed to delete assignment, error message: {}", response.toString());
             return Optional.empty();
         }
         return responseParser.parseToObject(Assignment.class, response);

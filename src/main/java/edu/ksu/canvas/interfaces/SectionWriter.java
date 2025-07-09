@@ -1,9 +1,11 @@
 package edu.ksu.canvas.interfaces;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import edu.ksu.canvas.model.Section;
+import org.apache.hc.core5.http.ProtocolException;
 
 /**
  * Created by japshvincent on 4/28/16.
@@ -39,7 +41,7 @@ public interface SectionWriter extends CanvasWriter<Section, SectionWriter> {
      * @return the section object that was deleted
      * @throws IOException When there is an error communicating with Canvas
      */
-    Optional<Section> deleteSection(String sectionId) throws IOException;
+    Optional<Section> deleteSection(String sectionId) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Move the Section to another course in Canvas.

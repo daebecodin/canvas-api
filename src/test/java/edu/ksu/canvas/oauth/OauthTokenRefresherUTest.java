@@ -1,6 +1,7 @@
 package edu.ksu.canvas.oauth;
 
 import edu.ksu.canvas.LocalServerTestBase;
+import org.apache.hc.core5.http.URIScheme;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -12,6 +13,10 @@ import java.util.Collections;
 
 @RunWith(JUnit4.class)
 public class OauthTokenRefresherUTest extends LocalServerTestBase {
+
+    public OauthTokenRefresherUTest() {
+        super(URIScheme.HTTP);
+    }
 
     @Test
     public void successfulRefresh() throws Exception {

@@ -20,11 +20,14 @@ import edu.ksu.canvas.requestOptions.GetSelectiveDataOptions;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
+
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +66,7 @@ public class ContentMigrationUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCourseContentMigrationCreation() throws IOException {
+    public void testCourseContentMigrationCreation() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_DESTINATION_COURSE_ID + "/content_migrations";
         fakeRestClient.addSuccessResponse(url, "SampleJson/contentMigration/CreateContentMigrationRunning.json");
         CreateCourseContentMigrationOptions createCourseContentMigrationOptions = new CreateCourseContentMigrationOptions(ARBITRARY_DESTINATION_COURSE_ID, ARBITRARY_COURSE_ID, MigrationType.course_copy_importer, false);
@@ -87,7 +90,7 @@ public class ContentMigrationUTest extends CanvasTestBase {
         assertEquals(MigrationType.course_copy_importer.toString(), cm.getMigrationType());
         assertNotNull(cm.getMigrationTypeTitle());
         assertEquals(WorkflowState.completed, cm.getWorkflowState());
-        assertEquals(new Integer(0), cm.getMigrationIssuesCount());
+        assertEquals(Integer.valueOf(0), cm.getMigrationIssuesCount());
         assertNotNull(cm.getMigrationIssuesUrl());
         assertNotNull(cm.getProgressUrl());
         assertEquals(ARBITRARY_USER_ID, cm.getUserId());
@@ -97,7 +100,7 @@ public class ContentMigrationUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testSelectiveCourseContentMigration() throws IOException {
+    public void testSelectiveCourseContentMigration() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_DESTINATION_COURSE_ID_2 + "/content_migrations";
         fakeRestClient.addSuccessResponse(url, "SampleJson/contentMigration/CreateContentMigrationWaiting.json");
         CreateCourseContentMigrationOptions createCourseContentMigrationOptions = new CreateCourseContentMigrationOptions(ARBITRARY_DESTINATION_COURSE_ID_2, ARBITRARY_COURSE_ID, MigrationType.course_copy_importer, true);
@@ -120,7 +123,7 @@ public class ContentMigrationUTest extends CanvasTestBase {
         fakeRestClient.addSuccessResponse(selectiveUrl, "SampleJson/contentMigration/GetSelectiveDataTypeAssignments.json");
         //getting selective data options of the assignments type for the content migration
         selectable = selectiveDataReader.getCourseSelectiveDataFromMigration(getSelectiveDataOptions);
-        assertEquals(new Integer(1), new Integer(selectable.size()));
+        assertEquals(Integer.valueOf(1),Integer.valueOf(selectable.size()));
         Optional<SelectiveData> selectedAssignment1 = selectable.get(0).getSubItems().stream().filter(assignment -> "assignments".equals(assignment.getType())).findFirst();
 
         //update course content migration with selected assignment items...
@@ -143,13 +146,13 @@ public class ContentMigrationUTest extends CanvasTestBase {
         fakeRestClient.addSuccessResponse(url, "SampleJson/contentMigration/GetContentMigrationCompletedWithIssues.json");
         //get course content migration information with migration issues
         Optional<ContentMigration> response = contentMigrationReader.getCourseContentMigration(ARBITRARY_DESTINATION_COURSE_ID_3, ARBITRARY_CONTENT_MIGRATION_ID); 
-        assertEquals(new Integer(1), response.get().getMigrationIssuesCount());
+        assertEquals(Integer.valueOf(1), response.get().getMigrationIssuesCount());
         assertEquals(migrationUrl, response.get().getMigrationIssuesUrl());
         
         fakeRestClient.addSuccessResponse(migrationUrl, "SampleJson/contentMigration/GetMigrationIssue.json");
         //get migration issues from content migration and verify the count matches the retrieved info
         List<MigrationIssue> issues = migrationIssueReader.getCourseMigrationIssues(ARBITRARY_DESTINATION_COURSE_ID_3, ARBITRARY_CONTENT_MIGRATION_ID_ISSUES);
-        assertEquals(response.get().getMigrationIssuesCount(), new Integer(issues.size()));
+        assertEquals(response.get().getMigrationIssuesCount(), Integer.valueOf(issues.size()));
         MigrationIssue mi = issues.get(0);
         assertNotNull(mi.getDescription());
         assertNotNull(mi.getContentMigrationUrl());
@@ -160,7 +163,7 @@ public class ContentMigrationUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testFileContentCourseMigration() throws IOException {
+    public void testFileContentCourseMigration() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/courses/" + ARBITRARY_DESTINATION_COURSE_ID_4 + "/content_migrations";
         fakeRestClient.addSuccessResponse(url, "SampleJson/contentMigration/CreateContentMigrationWithFile.json");
         CreateCourseContentMigrationOptions createCourseContentMigrationOptions = new CreateCourseContentMigrationOptions(ARBITRARY_DESTINATION_COURSE_ID_4, ARBITRARY_COURSE_ID, MigrationType.zip_file_importer, false);

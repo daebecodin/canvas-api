@@ -5,6 +5,7 @@ import edu.ksu.canvas.impl.GsonResponseParser;
 import org.apache.hc.client5.http.ContextBuilder;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -68,9 +69,15 @@ public class OauthTokenRefresher implements Serializable {
         HttpPost postRequest = new HttpPost(url);
 
         try {
+            String[] entityContent = new String[1]; // Array to capture content from lambda
             ClassicHttpResponse httpResponse = httpClient.execute(postRequest, context, response -> {
-                EntityUtils.consume(response.getEntity());
-                return null;
+                // Read the entity content here before it gets closed
+                try {
+                    entityContent[0] = new BasicHttpClientResponseHandler().handleResponse(response);
+                } catch (IOException e) {
+                    entityContent[0] = null;
+                }
+                return response;
             });
             int statusCode = httpResponse.getCode();
             if (statusCode == 401) {
@@ -79,15 +86,12 @@ public class OauthTokenRefresher implements Serializable {
             }
             if (statusCode != 200) {
                 LOG.error("Non-200 status code ( {} )returned while requesting an access token at URL {}", statusCode, url);
-                HttpEntity errorEntity = httpResponse.getEntity();
-                if (errorEntity != null) {
-                    String errorBody = EntityUtils.toString(errorEntity);
-                    LOG.error("Response from Canvas: {}", errorBody);
+                if (entityContent[0] != null) {
+                    LOG.error("Response from Canvas: {}", entityContent[0]);
                 }
                 return null;
             }
-            HttpEntity entity = httpResponse.getEntity();
-            String responseBody = EntityUtils.toString(entity);
+            String responseBody = entityContent[0]; // Use the already read content
             Gson gson = GsonResponseParser.getDefaultGsonParser(false);
             return gson.fromJson(responseBody, TokenRefreshResponse.class);
         } finally {

@@ -10,12 +10,14 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +62,7 @@ public class RestCanvasMessenger implements CanvasMessenger {
     }
 
     @Override
-    public Response sendToCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException {
+    public Response sendToCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         return restClient.sendApiPost(oauthToken, url, parameters, connectTimeout, readTimeout);
     }
 
@@ -80,12 +82,12 @@ public class RestCanvasMessenger implements CanvasMessenger {
     }
 
     @Override
-    public Response deleteFromCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException {
+    public Response deleteFromCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         return restClient.sendApiDelete(oauthToken, url, parameters, connectTimeout, readTimeout);
     }
 
     @Override
-    public Response putToCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException {
+    public Response putToCanvas(@NotNull OauthToken oauthToken, @NotNull String url, @NotNull Map<String, List<String>> parameters) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         return restClient.sendApiPut(oauthToken, url, parameters, connectTimeout, readTimeout);
     }
 
@@ -96,7 +98,7 @@ public class RestCanvasMessenger implements CanvasMessenger {
     }
 
     @Override
-    public String sendUpload(String uploadUrl, Map<String, List<String>> params, InputStream in, String filename) throws IOException {
+    public String sendUpload(String uploadUrl, Map<String, List<String>> params, InputStream in, String filename) throws IOException, ProtocolException, URISyntaxException {
         return restClient.sendUpload(uploadUrl, params, in, filename, connectTimeout, readTimeout);
     }
 

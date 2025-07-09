@@ -8,6 +8,7 @@ import edu.ksu.canvas.model.ContentMigration.WorkflowState;
 import edu.ksu.canvas.oauth.NonRefreshableOauthToken;
 import edu.ksu.canvas.requestOptions.CreateContentMigrationOptions.MigrationType;
 import edu.ksu.canvas.requestOptions.CreateCourseContentMigrationOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -66,7 +68,7 @@ public class ContentMigrationIT {
     }
 
     @Test
-    public void testCreateContentMigration() throws IOException, InterruptedException {
+    public void testCreateContentMigration() throws IOException, InterruptedException, ProtocolException, URISyntaxException {
         CreateCourseContentMigrationOptions createCourseContentMigrationOptions = new CreateCourseContentMigrationOptions(destinationCourse, course, MigrationType.course_copy_importer, false);
         Optional<ContentMigration> response = writer.createCourseContentMigration(createCourseContentMigrationOptions);
         assertNotNull(response.get().getProgressUrl());
@@ -80,7 +82,7 @@ public class ContentMigrationIT {
         while(WorkflowState.running.equals(workflowState) || WorkflowState.pre_processing.equals(workflowState)) {
             response = reader.getCourseContentMigration(destinationCourse, migrationId);
             assertEquals(migrationId, response.get().getId());
-            assertEquals(new Integer(0), response.get().getMigrationIssuesCount());
+            assertEquals(Integer.valueOf(0), response.get().getMigrationIssuesCount());
             workflowState = response.get().getWorkflowState();
             if(count++ > MAX_LOOPS) {
                 break;

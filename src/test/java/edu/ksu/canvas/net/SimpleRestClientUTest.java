@@ -6,6 +6,7 @@ import edu.ksu.canvas.exception.*;
 import edu.ksu.canvas.oauth.NonRefreshableOauthToken;
 import edu.ksu.canvas.oauth.OauthToken;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.URIScheme;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -24,8 +25,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class SimpleRestClientUTest extends LocalServerTestBase {
 
-    private OauthToken emptyAdminToken = new NonRefreshableOauthToken("");
+    private final OauthToken emptyAdminToken = new NonRefreshableOauthToken("");
     SimpleRestClient restClient = new SimpleRestClient();
+
+    public SimpleRestClientUTest() {
+        super(URIScheme.HTTP);
+    }
 
     @Test(expected=UnauthorizedException.class)
     public void http401UnauthorizedThrowsException() throws Exception {
@@ -137,7 +142,7 @@ public class SimpleRestClientUTest extends LocalServerTestBase {
             restClient.sendApiPost(emptyAdminToken, baseUrl + url, Collections.emptyMap(), 100, 100);
         } catch (CanvasException e) {
             Object o = e.getError();
-            // We shouldn't have helpful error object as this is a generic error.
+            // We shouldn't have a helpful error object as this is a generic error.
             assertNull(o);
         }
     }

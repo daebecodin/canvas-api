@@ -7,12 +7,14 @@ import edu.ksu.canvas.model.CalendarEvent;
 import edu.ksu.canvas.net.FakeRestClient;
 import edu.ksu.canvas.requestOptions.DeleteCalendarEventOptions;
 import junit.framework.AssertionFailedError;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public class CalendarWriterUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testAddCalendarEvent() throws IOException {
+    public void testAddCalendarEvent() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/calendar_events";
         fakeRestClient.addSuccessResponse(url, "SampleJson/calendar/CreateCalendarEvent.json");
         CalendarEvent event = new CalendarEvent();
@@ -43,7 +45,7 @@ public class CalendarWriterUTest extends CanvasTestBase {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testAddCalendarEventNoContext() throws IOException {
+    public void testAddCalendarEventNoContext() throws IOException, ProtocolException, URISyntaxException {
         CalendarEvent event = new CalendarEvent();
         event.setTitle("New Event");
         event.setLocationName("Somewhere");
@@ -53,7 +55,7 @@ public class CalendarWriterUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testEditCalendarEvent() throws IOException {
+    public void testEditCalendarEvent() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/calendar_events/1";
         fakeRestClient.addSuccessResponse(url, "SampleJson/calendar/EditCalendarEvent.json");
         CalendarEvent event = new CalendarEvent();
@@ -65,7 +67,7 @@ public class CalendarWriterUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testDeleteCalendarEvent() throws IOException {
+    public void testDeleteCalendarEvent() throws IOException, ProtocolException, URISyntaxException {
         String url = baseUrl + "/api/v1/calendar_events/1";
         fakeRestClient.addSuccessResponse(url, "SampleJson/calendar/DeleteCalendarEvent.json");
         Optional <CalendarEvent> deleteEventOpt =

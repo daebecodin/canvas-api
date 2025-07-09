@@ -17,6 +17,7 @@ public class CanvasErrorResponse {
 
     private Long errorReportId;
     private String status;
+    private String message;
     private List<ErrorMessage> errors;
 
     public void setErrorReportId(Long errorReportId) {
@@ -33,6 +34,14 @@ public class CanvasErrorResponse {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public void setErrors(List<ErrorMessage> errors) {

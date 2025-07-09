@@ -10,11 +10,13 @@ import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.AccountReportOptions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +49,7 @@ public class AccountReportImpl extends BaseImpl<AccountReport, AccountReportRead
     }
 
     @Override
-    public Optional<AccountReport> startReport(AccountReportOptions options) throws IOException {
+    public Optional<AccountReport> startReport(AccountReportOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Starting new report of type {} for account {}", options.getReportType(), options.getAccountId());
         String url = buildCanvasUrl("accounts/" + options.getAccountId() + "/reports/" + options.getReportType(), Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, options.getOptionsMap());
@@ -55,7 +57,7 @@ public class AccountReportImpl extends BaseImpl<AccountReport, AccountReportRead
     }
 
     @Override
-    public Optional<AccountReport> deleteReport(String accountId, String report, Long reportId) throws IOException {
+    public Optional<AccountReport> deleteReport(String accountId, String report, Long reportId) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting report ID {} for report {} on behalf of account {}", reportId, report, accountId);
         String url = buildCanvasUrl("accounts/" + accountId + "/reports/" + report + "/" + reportId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, url, Collections.emptyMap());

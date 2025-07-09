@@ -13,11 +13,13 @@ import edu.ksu.canvas.requestOptions.CreateUserOptions;
 import edu.ksu.canvas.requestOptions.GetUsersInAccountOptions;
 import edu.ksu.canvas.requestOptions.GetUsersInCourseOptions;
 
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +35,12 @@ public class UserImpl extends BaseImpl<User, UserReader, UserWriter> implements 
     }
 
     @Override
-    public Optional<User> createUser(User user) throws InvalidOauthTokenException, IOException {
+    public Optional<User> createUser(User user) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         return createUser(user, new CreateUserOptions());
     }
 
     @Override
-    public Optional<User> createUser(User user, CreateUserOptions options) throws InvalidOauthTokenException, IOException {
+    public Optional<User> createUser(User user, CreateUserOptions options) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         String createdUrl = buildCanvasUrl("accounts/" + CanvasConstants.ACCOUNT_ID + "/users", Collections.emptyMap());
         LOG.debug("create URl for user creation : {}", createdUrl);
         Map<String, List<String>> parameterMap = options.getOptionsMap();
@@ -52,7 +54,7 @@ public class UserImpl extends BaseImpl<User, UserReader, UserWriter> implements 
     }
 
     @Override
-    public Optional<User> updateUser(User user) throws InvalidOauthTokenException, IOException {
+    public Optional<User> updateUser(User user) throws InvalidOauthTokenException, IOException, ProtocolException, URISyntaxException {
         if(user == null || user.getId() == 0) {
             throw new IllegalArgumentException("User to update must not be null and have a Canvas ID assigned");
         }

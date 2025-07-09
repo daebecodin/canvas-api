@@ -8,10 +8,12 @@ import edu.ksu.canvas.interfaces.FileWriter;
 import edu.ksu.canvas.model.Deposit;
 import edu.ksu.canvas.oauth.NonRefreshableOauthToken;
 import edu.ksu.canvas.requestOptions.UploadOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
@@ -58,7 +60,7 @@ public class CourseUploadIT {
     }
 
     @Test
-    public void testFileUpload() throws IOException {
+    public void testFileUpload() throws IOException, ProtocolException, URISyntaxException {
         // This just attempts to upload a file to a course.
         CourseWriter writer = canvasApiFactory.getWriter(CourseWriter.class, nonRefreshableOauthToken);
         String filename = UUID.randomUUID().toString() + ".txt";

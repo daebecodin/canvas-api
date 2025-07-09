@@ -43,8 +43,8 @@ public class QuizSubmissionRetrieverUTest extends CanvasTestBase {
 
         List<QuizSubmission> submissions = quizSubmissionReader.getQuizSubmissions(someCourseId, someQuizId);
         Assert.assertEquals(2, submissions.size());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(1)::equals).findFirst().isPresent());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(2)::equals).findFirst().isPresent());
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(1L)::equals).findFirst().isPresent());
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(2L)::equals).findFirst().isPresent());
     }
 
     @Test(expected = JsonSyntaxException.class)
@@ -95,8 +95,8 @@ public class QuizSubmissionRetrieverUTest extends CanvasTestBase {
 
         List<QuizSubmission> submissions = quizSubmissionReader.readAsSisUser(someUserId).getQuizSubmissions(someCourseId, someQuizId);
         Assert.assertEquals(2, submissions.size());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(new Long(1)::equals).findFirst().isPresent());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(new Long(2)::equals).findFirst().isPresent());
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).anyMatch(Long.valueOf(1L)::equals));
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).anyMatch(Long.valueOf(2L)::equals));
     }
 
     @Test(expected = JsonSyntaxException.class)
@@ -126,8 +126,8 @@ public class QuizSubmissionRetrieverUTest extends CanvasTestBase {
 
         List<QuizSubmission> submissions = quizSubmissionReader.readAsCanvasUser(someUserId).getQuizSubmissions(someCourseId, someQuizId);
         Assert.assertEquals(2, submissions.size());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(1)::equals).findFirst().isPresent());
-        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(2)::equals).findFirst().isPresent());
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(1L)::equals).findFirst().isPresent());
+        Assert.assertTrue(submissions.stream().map(QuizSubmission::getId).filter(Long.valueOf(2L)::equals).findFirst().isPresent());
     }
 
     @Test(expected = JsonSyntaxException.class)

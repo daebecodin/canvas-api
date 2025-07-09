@@ -1,9 +1,11 @@
 package edu.ksu.canvas.interfaces;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import edu.ksu.canvas.model.assignment.Assignment;
+import org.apache.hc.core5.http.ProtocolException;
 
 public interface AssignmentWriter extends CanvasWriter<Assignment, AssignmentWriter> {
 
@@ -23,7 +25,7 @@ public interface AssignmentWriter extends CanvasWriter<Assignment, AssignmentWri
      * @return The deleted Assignment object as returned by the Canvas API
      * @throws IOException When there is an error communicating with Canvas
      */
-    Optional<Assignment> deleteAssignment(String courseId, Long assignmentId) throws IOException;
+    Optional<Assignment> deleteAssignment(String courseId, Long assignmentId) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Writes an Assignment object to the Canvas API

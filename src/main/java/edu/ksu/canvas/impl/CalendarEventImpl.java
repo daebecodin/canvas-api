@@ -9,11 +9,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.DeleteCalendarEventOptions;
 import edu.ksu.canvas.requestOptions.ListCalendarEventsOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +74,7 @@ public class CalendarEventImpl extends BaseImpl<CalendarEvent, CalendarReader, C
     }
 
     @Override
-    public Optional<CalendarEvent> deleteCalendarEvent(DeleteCalendarEventOptions options) throws IOException {
+    public Optional<CalendarEvent> deleteCalendarEvent(DeleteCalendarEventOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting calendar event: {}", options.getId());
         String url = buildCanvasUrl("/calendar_events/"+ options.getId(), Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, url, options.getOptionsMap());
@@ -85,7 +87,7 @@ public class CalendarEventImpl extends BaseImpl<CalendarEvent, CalendarReader, C
     }
 
     @Override
-    public Optional<CalendarEvent> createCalendarEvent(CalendarEvent calendarEvent) throws IOException {
+    public Optional<CalendarEvent> createCalendarEvent(CalendarEvent calendarEvent) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Creating calendar event.");
         String url = buildCanvasUrl("calendar_events", Collections.emptyMap());
         Objects.requireNonNull(calendarEvent.getContextCode(), "contextCode must be set to create a calendar event.");
@@ -97,7 +99,7 @@ public class CalendarEventImpl extends BaseImpl<CalendarEvent, CalendarReader, C
 
 
     @Override
-    public Optional<CalendarEvent> editCalendarEvent(CalendarEvent calendarEvent) throws IOException {
+    public Optional<CalendarEvent> editCalendarEvent(CalendarEvent calendarEvent) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Modify calendar event {}", calendarEvent.getId());
         String url = buildCanvasUrl("calendar_events/"+ calendarEvent.getId(), Collections.emptyMap());
         Map<String, List<String>> parameters = calendarEvent.toPostMap(false);

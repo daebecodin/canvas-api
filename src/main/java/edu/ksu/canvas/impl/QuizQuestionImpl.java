@@ -9,11 +9,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.GetQuizQuestionsOptions;
 
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class QuizQuestionImpl extends BaseImpl<QuizQuestion, QuizQuestionReader,
     }
 
     @Override
-    public boolean deleteQuizQuestion(String courseId, Long quizId, Long questionId) throws IOException {
+    public boolean deleteQuizQuestion(String courseId, Long quizId, Long questionId) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting quiz question in course {}, quiz {}, question {}", courseId, quizId, questionId);
         String url = buildCanvasUrl("courses/" + courseId + "/quizzes/" + quizId + "/questions/" + questionId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, url, Collections.emptyMap());

@@ -5,8 +5,10 @@ import edu.ksu.canvas.model.Deposit;
 import edu.ksu.canvas.model.Progress;
 import edu.ksu.canvas.requestOptions.DeleteCourseOptions;
 import edu.ksu.canvas.requestOptions.UploadOptions;
+import org.apache.hc.core5.http.ProtocolException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 public interface CourseWriter extends CanvasWriter<Course, CourseWriter> {
@@ -43,7 +45,7 @@ public interface CourseWriter extends CanvasWriter<Course, CourseWriter> {
      * @return true if the course was deleted
      * @throws IOException When there is an error communicating with Canvas
      */
-     Boolean deleteCourse(String courseId) throws IOException;
+     Boolean deleteCourse(String courseId) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Delete or conclude a course in Canvas.
@@ -52,7 +54,7 @@ public interface CourseWriter extends CanvasWriter<Course, CourseWriter> {
      * @return true if the operation was successful
      * @throws IOException When there is an error communicating with Canvas
      */
-     Boolean deleteCourse(DeleteCourseOptions options) throws IOException;
+     Boolean deleteCourse(DeleteCourseOptions options) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Start a file upload to a course.
@@ -62,7 +64,7 @@ public interface CourseWriter extends CanvasWriter<Course, CourseWriter> {
      * @throws IOException When there is an error communicating with Canvas
      * @return Deposit (This is part of the file upload workflow)
      */
-     Optional<Deposit> uploadFile(String courseId, UploadOptions options) throws IOException;
+     Optional<Deposit> uploadFile(String courseId, UploadOptions options) throws IOException, ProtocolException, URISyntaxException;
 
     /**
      * Change the workflow state of multiple courses at once
@@ -77,5 +79,5 @@ public interface CourseWriter extends CanvasWriter<Course, CourseWriter> {
      * @return Progress object to monitor the state of the batch operation
      * @throws IOException When there is an error communicating with Canvas
      */
-     Optional<Progress> batchUpdateCourseState(String accountId, Course.CourseEvent event, String... courseIds) throws IOException;
+     Optional<Progress> batchUpdateCourseState(String accountId, Course.CourseEvent event, String... courseIds) throws IOException, ProtocolException, URISyntaxException;
 }

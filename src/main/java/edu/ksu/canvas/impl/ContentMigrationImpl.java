@@ -9,11 +9,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.CreateContentMigrationOptions;
 import edu.ksu.canvas.requestOptions.CreateCourseContentMigrationOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +46,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> createCourseContentMigration(CreateCourseContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> createCourseContentMigration(CreateCourseContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("creating course content migration");
         String url = buildCanvasUrl("courses/" + options.getDestinationCourseId() + "/content_migrations", Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, options.getOptionsMap());
@@ -52,7 +54,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> updateCourseContentMigration(Long id, CreateCourseContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> updateCourseContentMigration(Long id, CreateCourseContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("updating course content migration {}", id);
         String url = buildCanvasUrl("courses/" + options.getDestinationCourseId() + "/content_migrations/" + id.toString(), Collections.emptyMap());
         Response response = canvasMessenger.putToCanvas(oauthToken, url, options.getOptionsMap());
@@ -76,7 +78,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> createUserContentMigration(CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> createUserContentMigration(CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("creating user content migration");
         String url = buildCanvasUrl("users/" + options.getSourceCourseId() + "/content_migrations", Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, options.getOptionsMap());
@@ -84,7 +86,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> updateUserContentMigration(Long id, CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> updateUserContentMigration(Long id, CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("updating user content migration {}", id);
         String url = buildCanvasUrl("users/" + options.getSourceCourseId() + "/content_migrations/" + id.toString(), Collections.emptyMap());
         Response response = canvasMessenger.putToCanvas(oauthToken, url, options.getOptionsMap());
@@ -108,7 +110,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> createGroupContentMigration(CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> createGroupContentMigration(CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("creating group content migration");
         String url = buildCanvasUrl("groups/" + options.getSourceCourseId() + "/content_migrations", Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, options.getOptionsMap());
@@ -116,7 +118,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> updateGroupContentMigration(Long id, CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> updateGroupContentMigration(Long id, CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("updating group content migration {}", id);
         String url = buildCanvasUrl("groups/" + options.getSourceCourseId() + "/content_migrations/" + id.toString(), Collections.emptyMap());
         Response response = canvasMessenger.putToCanvas(oauthToken, url, options.getOptionsMap());
@@ -140,7 +142,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> createAccountContentMigration(CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> createAccountContentMigration(CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("creating account content migration");
         String url = buildCanvasUrl("accounts/" + options.getSourceCourseId() + "/content_migrations", Collections.emptyMap());
         Response response = canvasMessenger.sendToCanvas(oauthToken, url, options.getOptionsMap());
@@ -148,7 +150,7 @@ public class ContentMigrationImpl extends BaseImpl<ContentMigration, ContentMigr
     }
 
     @Override
-    public Optional<ContentMigration> updateAccountContentMigration(Long id, CreateContentMigrationOptions options) throws IOException {
+    public Optional<ContentMigration> updateAccountContentMigration(Long id, CreateContentMigrationOptions options) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("updating account content migration {}", id);
         String url = buildCanvasUrl("accounts/" + options.getSourceCourseId() + "/content_migrations/" + id.toString(), Collections.emptyMap());
         Response response = canvasMessenger.putToCanvas(oauthToken, url, options.getOptionsMap());

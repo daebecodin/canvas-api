@@ -17,7 +17,7 @@ import java.util.List;
  * A class with a main method that executes a couple of simple read-only requests
  * to the Canvas API. Intended as an example of how to use the library and an
  * easy place to write simple tests when developing.
- *
+
  * When executing the main method, you must pass in the Canvas base URL and a
  * manually generated API access token which you can get from your Canvas user
  * settings page.

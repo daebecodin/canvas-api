@@ -9,6 +9,7 @@ import edu.ksu.canvas.model.Section;
 import edu.ksu.canvas.oauth.NonRefreshableOauthToken;
 import edu.ksu.canvas.requestOptions.DeleteCalendarEventOptions;
 import edu.ksu.canvas.requestOptions.ListCalendarEventsOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class CalendarIT {
     }
 
     @Test
-    public void testCreateReadDelete() throws IOException {
+    public void testCreateReadDelete() throws IOException, ProtocolException, URISyntaxException {
         CalendarEvent event = new CalendarEvent();
         event.setContextCode("user_" + user);
         event.setTitle("Test Event");
@@ -92,7 +94,7 @@ public class CalendarIT {
     }
 
     @Test
-    public void testRepeatingEvents() throws IOException {
+    public void testRepeatingEvents() throws IOException, ProtocolException, URISyntaxException {
         String uniqueKey = UUID.randomUUID().toString();
         {
             CalendarEvent event = new CalendarEvent();
@@ -124,7 +126,7 @@ public class CalendarIT {
     }
 
     @Test
-    public void testSectionEvents() throws IOException {
+    public void testSectionEvents() throws IOException, ProtocolException, URISyntaxException {
         SectionWriter sectionWriter = canvasApiFactory.getWriter(SectionWriter.class, nonRefreshableOauthToken);
 
         Long section1Id, section2Id;

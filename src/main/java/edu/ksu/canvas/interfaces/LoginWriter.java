@@ -1,9 +1,11 @@
 package edu.ksu.canvas.interfaces;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import edu.ksu.canvas.model.Login;
+import org.apache.hc.core5.http.ProtocolException;
 
 public interface LoginWriter extends CanvasWriter<Login, LoginWriter> {
 
@@ -21,5 +23,5 @@ public interface LoginWriter extends CanvasWriter<Login, LoginWriter> {
      * @return The now deleted login record
      * @throws IOException When there is an error communicating with Canvas
      */
-    Optional<Login> deleteLogin(Login login) throws IOException;
+    Optional<Login> deleteLogin(Login login) throws IOException, ProtocolException, URISyntaxException;
 }

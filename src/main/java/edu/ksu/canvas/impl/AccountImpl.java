@@ -11,11 +11,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.GetSubAccountsOptions;
 import edu.ksu.canvas.requestOptions.ListAccountOptions;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class AccountImpl extends BaseImpl<Account, AccountReader, AccountWriter> implements AccountReader, AccountWriter {
@@ -87,7 +89,7 @@ public class AccountImpl extends BaseImpl<Account, AccountReader, AccountWriter>
     }
 
     @Override
-    public Boolean deleteAccount(String parentAccountId, String accountId) throws IOException {
+    public Boolean deleteAccount(String parentAccountId, String accountId) throws IOException, ProtocolException, URISyntaxException {
         Map<String, List<String>> postParams = new HashMap<>();
         String deleteUrl = buildCanvasUrl("accounts/" + parentAccountId+ "/sub_accounts/"+ accountId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, deleteUrl, postParams);
@@ -96,6 +98,6 @@ public class AccountImpl extends BaseImpl<Account, AccountReader, AccountWriter>
             return false;
         }
         Optional<Delete> responseParsed = responseParser.parseToObject(Delete.class, response);
-        return responseParsed.map(r -> r.getDelete()).orElse(false);
+        return responseParsed.map(Delete::getDelete).orElse(false);
     }
 }

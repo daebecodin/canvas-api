@@ -11,11 +11,13 @@ import edu.ksu.canvas.net.RestClient;
 import edu.ksu.canvas.oauth.OauthToken;
 import edu.ksu.canvas.requestOptions.ListExternalToolsOptions;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -116,14 +118,14 @@ public class ExternalToolImpl extends BaseImpl<ExternalTool, ExternalToolReader,
         return responseParser.parseToObject(ExternalTool.class, response);
     }
 
-    public Optional<ExternalTool> deleteExternalToolInCourse(String courseId, Long toolId) throws IOException {
+    public Optional<ExternalTool> deleteExternalToolInCourse(String courseId, Long toolId) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting external tool {} from course {}", toolId, courseId);
         String url = buildCanvasUrl("courses/" + courseId + "/external_tools/" + toolId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, url, Collections.emptyMap());
         return responseParser.parseToObject(ExternalTool.class, response);
     }
 
-    public Optional<ExternalTool> deleteExternalToolInAccount(String accountId, Long toolId) throws IOException {
+    public Optional<ExternalTool> deleteExternalToolInAccount(String accountId, Long toolId) throws IOException, ProtocolException, URISyntaxException {
         LOG.debug("Deleting external tool {} from account {}", toolId, accountId);
         String url = buildCanvasUrl("accounts/" + accountId + "/external_tools/" + toolId, Collections.emptyMap());
         Response response = canvasMessenger.deleteFromCanvas(oauthToken, url, Collections.emptyMap());

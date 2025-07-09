@@ -6,12 +6,14 @@ import edu.ksu.canvas.impl.UserImpl;
 import edu.ksu.canvas.interfaces.UserWriter;
 import edu.ksu.canvas.model.User;
 import edu.ksu.canvas.net.FakeRestClient;
+import org.apache.hc.core5.http.ProtocolException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 public class UserManagerUTest extends CanvasTestBase {
@@ -26,7 +28,7 @@ public class UserManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testCreateUser() throws IOException {
+    public void testCreateUser() throws IOException, ProtocolException, URISyntaxException {
         User user = new User();
         user.setName("somestring4");
         user.setLoginId("somestring4");
@@ -45,7 +47,7 @@ public class UserManagerUTest extends CanvasTestBase {
     }
 
     @Test
-    public void testSisUserMasqueradeCreateUser() throws IOException {
+    public void testSisUserMasqueradeCreateUser() throws IOException, ProtocolException, URISyntaxException {
         User user = new User();
         String userId = "899123456";
         user.setName("somestring4");
@@ -58,7 +60,7 @@ public class UserManagerUTest extends CanvasTestBase {
         Assert.assertNotNull(response.get().getId());
     }
     @Test
-    public void testCanvasUserMasqueradeCreateUser() throws IOException {
+    public void testCanvasUserMasqueradeCreateUser() throws IOException, ProtocolException, URISyntaxException {
         User user = new User();
         String userId = "899123456";
         user.setName("somestring4");

@@ -62,7 +62,7 @@ public class AssignmentOverrideUTest extends CanvasTestBase {
         Optional<AssignmentOverride> assignmentOverride = assignmentOverrideReader.getAssignmentOverride(someCourseId, someAssignmentId, someAssignmentOverrideId);
         
         Assert.assertTrue(assignmentOverride.isPresent());
-        Assert.assertEquals(new Long(4), assignmentOverride.map(AssignmentOverride::getId).orElse(0L));
+        Assert.assertEquals(Long.valueOf(4L), assignmentOverride.map(AssignmentOverride::getId).orElse(0L));
     }
 
     @Test

@@ -52,7 +52,7 @@ public class AssignmentGroupUTest extends CanvasTestBase {
 
         assertTrue("Assignment group must be present in result", assignmentGroupResult.isPresent());
         assertEquals("Assignments", assignmentGroupResult.get().getName());
-        assertEquals(new Long(123), assignmentGroupResult.get().getId());
+        assertEquals(Long.valueOf(123L), assignmentGroupResult.get().getId());
     }
 
     @Test(expected = IllegalArgumentException.class)
